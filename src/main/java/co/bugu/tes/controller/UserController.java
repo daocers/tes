@@ -20,6 +20,13 @@ public class UserController {
     @Autowired
     IUserService userService;
 
+
+    @RequestMapping("/index")
+    public String toLogin(){
+        return "login";
+    }
+
+
     @RequestMapping("/login")
     @ResponseBody
     public String login(User user){

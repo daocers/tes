@@ -44,7 +44,7 @@
         <property name="unauthorizedUrl" value="/views/unauthorized.jsp"/>
         <property name="filterChainDefinitions">
             <value>
-                /login=anon
+                /views/login.jsp=anon
                 /user/admin=authc
             </value>
         </property>
