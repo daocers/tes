@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <mvc:annotation-driven/>
+
+    <context:component-scan base-package="co.bugu.tes.controller"/>
+
+
+    <!--试图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/views"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+
+    <!--全局异常处理器  只有一个起作用-->
+    <!--<bean id="exceptionResolver" class="co.bugu.tes.framework.exception.ExceptionHandler"/>-->
+
+
+    <!--配置上传文件数据解析器-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize">
+            <value>1024000</value>
+        </property>
+    </bean>
+</beans>
