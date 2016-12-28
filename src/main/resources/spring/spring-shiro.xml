@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--保证实现了shiro内部lifecycle函数的bean的执行-->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor">
+
+    </bean>
+
+    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.Md5CredentialsMatcher">
+
+    </bean>
+
+    <bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager">
+
+    </bean>
+
+
+    <!--<bean id="jdbcRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">-->
+        <!--<property name="credentialsMatcher" ref="credentialsMatcher"/>-->
+        <!--<property name="permissionsLookupEnabled" value="true"/>-->
+        <!--<property name="dataSource" ref="dataSource"/>-->
+        <!--<property name="authenticationQuery"-->
+                  <!--value="select password from tes_user where username = ?"/>-->
+        <!--<property name="userRolesQuery"-->
+                  <!--value="select name from tes_role"-->
+    <!--</bean>-->
+    <bean id="jdbcRealm" class="co.bugu.tes.shiro.JdbcRealm">
+
+    </bean>
+
+
+    <!--安全管理器-->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="jdbcRealm"/>
+        <property name="cacheManager" ref="cacheManager"/>
+    </bean>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/views/login.jsp"/>
+        <property name="unauthorizedUrl" value="/views/unauthorized.jsp"/>
+        <property name="filterChainDefinitions">
+            <value>
+                /login=anon
+                /user/admin=authc
+            </value>
+        </property>
+    </bean>
+
+
+    <!--开始shiro注解-->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor">
+    </bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+</beans>
