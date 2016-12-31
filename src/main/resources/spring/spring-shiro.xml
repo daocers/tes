@@ -40,12 +40,21 @@
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="/views/login.jsp"/>
+        <property name="loginUrl" value="/views/index.do"/>
         <property name="unauthorizedUrl" value="/views/unauthorized.jsp"/>
         <property name="filterChainDefinitions">
             <value>
-                /views/login.jsp=anon
-                /user/admin=authc
+                <!--anno表示此地址不需要任何的权限即可访问-->
+                /views/index.do=anon
+
+                <!--表示访问该url需要user：query的权限 -->
+                /user=perms[user:query]
+
+                <!--表示访问此链接需要用户角色为manager-->
+                /user/add=roles[manager]
+
+                <!--除了以上配置的请求外，其他请求都需要使用authc验证，未登录直接跳转到/login-->
+                /**=authc
             </value>
         </property>
     </bean>
