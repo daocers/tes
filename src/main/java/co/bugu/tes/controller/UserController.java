@@ -31,7 +31,7 @@ public class UserController {
 
 
     @RequestMapping("/index")
-    public String toLogin(){
+    public String toLogin(boolean flag){
         try{
             Map<String, Object> map = new HashMap<>();
             map.put("name", "allen");

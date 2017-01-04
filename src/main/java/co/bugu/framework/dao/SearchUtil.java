@@ -53,6 +53,20 @@ enum ParamType {
     public Class<?> getValue() {
         return type;
     }
+}
 
-
+/**
+ * 操作符号
+ */
+enum Operator {
+    EQ ,//值相等
+    NEQ, //值不等
+    LIKE, //值模糊匹配
+    GT, //大于
+    LT, //小于
+    GTE, //大于等于
+    LTE ,//小于等于
+    IN ,//在某个范围内
+    FIELDEQ,//一个字段等于另一个字段
+    FIELDNEQ//一个字段不等于另一个字段
 }
