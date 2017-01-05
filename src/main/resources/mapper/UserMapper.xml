@@ -11,4 +11,16 @@
         select * from tes_user WHERE id = #{id}
     </select>
 
+
+    <select id="selectByObject" resultMap="UserMap" parameterType="co.bugu.tes.domain.User">
+        SELECT * FROM tes_user WHERE id = #{id} and username = #{username}
+    </select>
+
+    <select id="findByObject" resultMap="UserMap" parameterType="co.bugu.tes.domain.User">
+        SELECT * from tes_user
+    </select>
+
+    <insert id="insert" parameterType="co.bugu.tes.domain.User" keyProperty="id" useGeneratedKeys="true">
+        insert into tes_user(id, username, password) values (#{id}, #{username}, #{password})
+    </insert>
 </mapper>

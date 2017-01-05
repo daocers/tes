@@ -1,35 +1,24 @@
 package co.bugu.framework.dao;
 
-import org.apache.ibatis.exceptions.ExceptionFactory;
-import org.apache.ibatis.executor.ErrorContext;
-import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.RowBounds;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.defaults.DefaultSqlSession;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by user on 2016/12/31.
+ * Created by daocers on 2016/5/31.
  */
 public class BaseDao<T> extends SqlSessionDaoSupport {
-    @Autowired
-    SqlSessionFactoryBean sqlSessionFactory;
-
     private static Logger logger = LoggerFactory.getLogger(BaseDao.class);
 
     public <T> T selectOne(String statement) {
@@ -144,40 +133,6 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
         return pageInfo;
     }
 
-//    public <E> PageInfo<E> searchByParam(String statement, Map<String, Object> searchParam, PageInfo<E> pageInfo) throws SQLException {
-//        String where = processSearchCondition(searchParam);
-//        MappedStatement mappedStatement = this.getSqlSession().getConfiguration().getMappedStatement(statement);
-//        BoundSql boundSql = mappedStatement.getBoundSql(parameter);
-//        Connection connection = this.getSqlSession().getConfiguration().getEnvironment().getDataSource().getConnection();
-//
-//        String sql = boundSql.getSql();
-//
-//
-//
-//        return pageInfo;
-//    }
-
-    /**
-     * 处理查询条件，
-     * @param searchParam
-     * @return where子句
-     */
-//    private String processSearchCondition(Map<String, Object> searchParam) {
-//        StringBuffer buffer = new StringBuffer();
-//        Iterator<Map.Entry<String, Object>> iter = searchParam.entrySet().iterator();
-//        while(iter.hasNext()){
-//            Map.Entry<String, Object> entry = iter.next();
-//            String key = entry.getKey();
-//            if(key.contains("_")){
-//                String[] parts = key.split("_");
-//                String operation = parts[0];
-//                String field = parts[1];
-//                this.getSqlSession().getConfiguration().getre
-//            }
-//        }
-//
-//    }
-
     /**
      * 获取查询总记录
      *
@@ -190,12 +145,26 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
 
         MappedStatement mappedStatement = this.getSqlSession().getConfiguration().getMappedStatement(statement);
         BoundSql boundSql = mappedStatement.getBoundSql(parameterObject);
-        Connection connection = this.getSqlSession().getConfiguration().getEnvironment().getDataSource().getConnection();
+        Connection connection = this.getSqlSession().getConfiguration().getEnvironment().getDataSource().getConnection()    ;
 
         String sql = boundSql.getSql();
         sql = sql.toLowerCase();
+        String newSql = "";
 
-        String newSql = "select count(0) as cnt from " + sql.split("from")[1];
+        if(sql.contains("join")){
+            if(sql.contains("order by")){
+                newSql = sql.split("order by")[0];
+            }else{
+                newSql = sql;
+            }
+            if(newSql.endsWith(";")){
+                newSql = newSql.substring(0, newSql.length() - 1);
+            }
+
+            newSql = "select count(0) as cnt from (" + newSql + " group by 1) as tmp";
+        }else{
+            newSql = "select count(0) ac cnt from " + sql.split("from")[1];
+        }
 
         logger.debug("执行分页，查询语句为： {}", newSql);
 
@@ -222,17 +191,15 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
             }
 
             try {
-                if (connection != null) {
+                if(connection != null){
                     connection.close();
                 }
-            } catch (Exception e) {
+            }catch (Exception e){
                 throw new Exception("关闭连接发生异常", e);
             }
         }
 
         return count;
     }
-
-
 
 }

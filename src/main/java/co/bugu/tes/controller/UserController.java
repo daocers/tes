@@ -8,10 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,13 +33,22 @@ public class UserController {
 
 
     @RequestMapping("/index")
-    public String toLogin(boolean flag){
+    public String toLogin(ModelMap modelMap){
         try{
-            Map<String, Object> map = new HashMap<>();
-            map.put("name", "allen");
-            ThreadLocalUtil.set(map);
-            User user = (User) baseDao.selectOne("tes.user.selectById", 1);
+//            Map<String, Object> map = new HashMap<>();
+//            map.put("name", "allen");
+//            ThreadLocalUtil.set(map);
+            User user = new User();
+            user.setId(1);
+            user.setUsername("allen");
+            user.setPassword("allen");
+            List<User> list  = userService.findByObject(user);
+            user.setId(2);
+            userService.save(user);
             logger.debug("user: {}" , user);
+            logger.debug("userList: {}", list);
+
+            modelMap.put("msg", "something to show");
 
         }catch (Exception e){
             logger.error("错误：", e);
@@ -49,7 +60,8 @@ public class UserController {
     @RequestMapping("/login")
     @ResponseBody
     public String login(User user){
-        return userService.login(user) + "";
+//        return userService.login(user) + "";
+        return "";
     }
 
 }

@@ -1,21 +1,19 @@
 package co.bugu.tes.service;
 
-import co.bugu.tes.domain.User;
 
-import java.util.Set;
+public interface IUserService<User> extends IBaseService<User> {
+//    int save(User user);
+//
+//    int updateById(User user);
+//
+//    int saveOrUpdate(User user);
+//
+//    int delete(User user);
+//
+//    User findById(Integer id);
+//
+//    List<User> findAllByObject(User user);
+//
+//    PageInfo listByObject(User user, PageInfo<User> pageInfo) throws Exception;
 
-/**
- * Created by Administrator on 2016/12/28.
- */
-public interface IUserService {
-    boolean login(User user);
-
-    Set<String> getRoles(Integer id);
-
-
-    Set<String> getPermissions(Integer id);
-
-    User get(Integer id);
-
-    User findByUsername(String username);
 }

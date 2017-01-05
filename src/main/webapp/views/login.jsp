@@ -11,11 +11,14 @@
     <title>登录</title>
 </head>
 <body>
+    <div id="msg" class="hide" var="${msg}"></div>
     <form about="login.do" method="post">
         username: <input type="text" name="username"/> <br/>
         password: <input type="password" name="password"/><br/>
         <input type="submit" value="登录">${error}
     </form>
+    <script>
 
+    </script>
 </body>
 </html>

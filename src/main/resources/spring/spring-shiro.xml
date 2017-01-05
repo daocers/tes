@@ -40,12 +40,13 @@
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="/views/index.do"/>
+        <property name="loginUrl" value="/views/login.jsp"/>
         <property name="unauthorizedUrl" value="/views/unauthorized.jsp"/>
         <property name="filterChainDefinitions">
             <value>
                 <!--anno表示此地址不需要任何的权限即可访问-->
                 /views/index.do=anon
+                /v1/user/index.do=anon
 
                 <!--表示访问该url需要user：query的权限 -->
                 /user=perms[user:query]

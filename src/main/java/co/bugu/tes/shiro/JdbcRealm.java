@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
  *
  * Created by Administrator on 2016/12/28.
@@ -20,7 +22,7 @@ public class JdbcRealm extends AuthorizingRealm {
     private Logger logger = LoggerFactory.getLogger(JdbcRealm.class);
 
     @Autowired
-    IUserService userService;
+    IUserService<User> userService;
 
     /**
      * 为当前登录成功的用户授权和角色，
@@ -31,8 +33,8 @@ public class JdbcRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         Integer id = (Integer) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        authorizationInfo.setRoles(userService.getRoles(id));
-        authorizationInfo.setStringPermissions(userService.getPermissions(id));
+//        authorizationInfo.setRoles(userService.getRoles(id));
+//        authorizationInfo.setStringPermissions(userService.getPermissions(id));
         return authorizationInfo;
     }
 
@@ -46,16 +48,25 @@ public class JdbcRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String username = token.getUsername();
+        char[] password = token.getPassword();
         logger.debug("登录，当前用户：{}", username);
 
         if(StringUtils.isEmpty(username)){
             return null;
         }
-        User user = userService.findByUsername(username);
-        if(user != null){
-            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user.getId(), user.getPassword(), getName());
-            return info;
+        StringBuffer buffer = new StringBuffer();
+        for(char c : password){
+            buffer.append(c);
         }
-        return null;
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(buffer.toString());
+        List<User> userList = userService.findByObject(user);
+        if(userList == null || userList.size() == 0){
+            return null;
+        }
+        user = userList.get(0);
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user.getId(), user.getPassword(), getName());
+        return info;
     }
 }

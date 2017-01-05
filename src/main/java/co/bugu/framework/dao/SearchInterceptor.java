@@ -1,16 +1,20 @@
 package co.bugu.framework.dao;
 
+import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
+import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -48,15 +52,29 @@ public class SearchInterceptor implements Interceptor {
             BoundSql boundSql = (BoundSql) metaStatementHandler.getValue("delegate.boundSql");
             // 分页参数作为参数对象parameterObject的一个属性
             String sql = boundSql.getSql();
-            // 重写sql
 //            String pageSql = buildPageSql(sql, page);
-            String newSql = sql + " and username = 'allen'";
+            String newSql = sql + " and password = ?";
+
+//            ParameterMapping parameterMapping = null;
+            ParameterMapping.Builder builder = new ParameterMapping.Builder(mappedStatement.getConfiguration(), "password", String.class);
+            List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+            parameterMappings.add(builder.build());
             //重写分页sql
 //            metaStatementHandler.setValue("delegate.boundSql.sql", pageSql);
             metaStatementHandler.setValue("delegate.boundSql.sql", newSql);
-//            Connection connection = (Connection) invocation.getArgs()[0];
+
+            Connection connection = (Connection) invocation.getArgs()[0];
+            PreparedStatement preparedStatement = connection.prepareStatement(newSql);
+
+            BoundSql newBoundSql = new BoundSql(mappedStatement.getConfiguration(), newSql , parameterMappings, boundSql.getParameterObject());
+            ParameterHandler parameterHandler = new DefaultParameterHandler(mappedStatement, boundSql.getParameterObject(), newBoundSql);
+            parameterHandler.setParameters(preparedStatement);
+
+
+
             // 重设分页参数里的总页数等
 //            setPageParameter(sql, connection, mappedStatement, boundSql, page);
+
             // 将执行权交给下一个拦截器
             return invocation.proceed();
         } else if (invocation.getTarget() instanceof ResultSetHandler) {
