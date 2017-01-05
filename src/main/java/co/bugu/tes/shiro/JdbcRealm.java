@@ -1,8 +1,11 @@
 package co.bugu.tes.shiro;
 
+import co.bugu.tes.domain.Authority;
+import co.bugu.tes.domain.Role;
 import co.bugu.tes.domain.User;
 import co.bugu.tes.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -12,7 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -33,8 +38,26 @@ public class JdbcRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         Integer id = (Integer) principalCollection.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-//        authorizationInfo.setRoles(userService.getRoles(id));
-//        authorizationInfo.setStringPermissions(userService.getPermissions(id));
+        User user = userService.findById(id);
+        Set<String> roles = new HashSet<>();
+        if(user.getRoleList().size() > 0){
+            for(Role role: user.getRoleList()){
+                roles.add(role.getName());
+            }
+        }
+
+
+        authorizationInfo.setRoles(roles);
+        Set<String> authorities = new HashSet<>();
+        if(user.getAuthorityList().size() > 0){
+            for(Authority authority: user.getAuthorityList()){
+                authorities.add(authority.getName());
+            }
+        }
+        for(Authority authority: user.getAuthorityList()){
+            authorities.add(authority.getName());
+        }
+        authorizationInfo.setStringPermissions(authorities);
         return authorizationInfo;
     }
 
@@ -65,8 +88,16 @@ public class JdbcRealm extends AuthorizingRealm {
         if(userList == null || userList.size() == 0){
             return null;
         }
+        if(userList.size() > 1){
+            try {
+                throw new Exception("用户异常");
+            } catch (Exception e) {
+                e.printStackTrace();
+                logger.error("异常：查找到两个以上用户。");
+            }
+        }
         user = userList.get(0);
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user.getId(), user.getPassword(), getName());
+        AuthenticationInfo info = new SimpleAuthenticationInfo(user.getId(), user.getPassword(), getName());
         return info;
     }
 }

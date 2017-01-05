@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="tes.profile" >
+  <resultMap id="ProfileMap" type="co.bugu.tes.domain.Profile" >
+    <id column="profile_id" property="id" jdbcType="INTEGER" />
+    <result column="profile_exam_status" property="examStatus" jdbcType="VARCHAR" />
+    <result column="profile_exam_status_update" property="examStatusUpdate" jdbcType="TIMESTAMP" />
+    <result column="profile_id_no" property="idNo" jdbcType="VARCHAR" />
+    <result column="profile_name" property="name" jdbcType="VARCHAR" />
+    <result column="profile_user_id" property="userId" jdbcType="INTEGER" />
+    <result column="profile_regist_time" property="registTime" jdbcType="TIMESTAMP" />
+    <result column="profile_type" property="type" jdbcType="INTEGER" />
+    <result column="profile_level" property="level" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="profile_list" >
+    profile.id as profile_id, profile.exam_status as profile_exam_status, profile.exam_status_update as profile_exam_status_update, 
+    profile.id_no as profile_id_no, profile.name as profile_name, profile.user_id as profile_user_id, 
+    profile.regist_time as profile_regist_time, profile.type as profile_type, profile.level as profile_level
+  </sql>
+  <select id="selectById" resultMap="ProfileMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="profile_list" />
+    from profile profile
+    where profile.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteById" parameterType="java.lang.Integer" >
+    delete from profile
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert"  useGeneratedKeys="true" keyProperty="id"  parameterType="co.bugu.tes.domain.Profile" >
+    insert into profile
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="examStatus != null" >
+        exam_status,
+      </if>
+      <if test="examStatusUpdate != null" >
+        exam_status_update,
+      </if>
+      <if test="idNo != null" >
+        id_no,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="registTime != null" >
+        regist_time,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="examStatus != null" >
+        #{examStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="examStatusUpdate != null" >
+        #{examStatusUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="idNo != null" >
+        #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="registTime != null" >
+        #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateById" parameterType="co.bugu.tes.domain.Profile" >
+    update profile
+    <set >
+      <if test="examStatus != null" >
+        exam_status = #{examStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="examStatusUpdate != null" >
+        exam_status_update = #{examStatusUpdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="idNo != null" >
+        id_no = #{idNo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="registTime != null" >
+        regist_time = #{registTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+
+<select id="findByObject" resultMap="ProfileMap" parameterType="co.bugu.tes.domain.Profile" >
+    select 
+    <include refid="profile_list" />
+    from profile profile
+    </select>
+</mapper>

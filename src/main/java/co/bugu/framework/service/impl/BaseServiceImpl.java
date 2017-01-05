@@ -1,8 +1,8 @@
-package co.bugu.tes.service.impl;
+package co.bugu.framework.service.impl;
 
 import co.bugu.framework.dao.BaseDao;
 import co.bugu.framework.dao.PageInfo;
-import co.bugu.tes.service.IBaseService;
+import co.bugu.framework.service.IBaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.ParameterizedType;

@@ -27,7 +27,6 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-
     @Autowired
     BaseDao baseDao;
 
@@ -61,7 +60,7 @@ public class UserController {
     @ResponseBody
     public String login(User user){
 //        return userService.login(user) + "";
-        return "";
+        return "success";
     }
 
 }

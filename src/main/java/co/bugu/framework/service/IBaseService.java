@@ -1,4 +1,4 @@
-package co.bugu.tes.service;
+package co.bugu.framework.service;
 
 import co.bugu.framework.dao.PageInfo;
 

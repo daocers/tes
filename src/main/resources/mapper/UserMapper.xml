@@ -1,26 +1,161 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="tes.user" >
+<mapper namespace="tes.user">
     <resultMap id="UserMap" type="co.bugu.tes.domain.User">
-        <id property="id" column="id" jdbcType="INTEGER"/>
-        <result property="username" column="username" jdbcType="VARCHAR"/>
-        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <id column="user_id" property="id" jdbcType="INTEGER"/>
+        <result column="user_branch_id" property="branchId" jdbcType="INTEGER"/>
+        <result column="user_department_id" property="departmentId" jdbcType="INTEGER"/>
+        <result column="user_password" property="password" jdbcType="VARCHAR"/>
+        <result column="user_station_id" property="stationId" jdbcType="INTEGER"/>
+        <result column="user_status" property="status" jdbcType="INTEGER"/>
+        <result column="user_username" property="username" jdbcType="VARCHAR"/>
+        <collection property="roleList" ofType="co.bugu.tes.domain.Role" resultMap="RoleMap"/>
+        <collection property="authorityList" ofType="co.bugu.tes.domain.Authority" resultMap="AuthorityMap"/>
     </resultMap>
 
-    <select id="selectById" resultMap="UserMap" parameterType="int">
-        select * from tes_user WHERE id = #{id}
-    </select>
+    <resultMap id="RoleMap" type="co.bugu.tes.domain.Role">
+        <id column="role_id" property="id" jdbcType="INTEGER"/>
+        <result column="role_description" property="description" jdbcType="VARCHAR"/>
+        <result column="role_name" property="name" jdbcType="VARCHAR"/>
+        <result column="role_status" property="status" jdbcType="INTEGER"/>
+        <collection property="authorityList" ofType="co.bugu.tes.domain.Authority"/>
+    </resultMap>
 
-
-    <select id="selectByObject" resultMap="UserMap" parameterType="co.bugu.tes.domain.User">
-        SELECT * FROM tes_user WHERE id = #{id} and username = #{username}
+    <resultMap id="AuthorityMap" type="co.bugu.tes.domain.Authority">
+        <id column="auth_id" property="id" jdbcType="INTEGER"/>
+        <result column="auth_action" property="action" jdbcType="VARCHAR"/>
+        <result column="auth_controller" property="controller" jdbcType="VARCHAR"/>
+        <result column="auth_description" property="description" jdbcType="VARCHAR"/>
+        <result column="auth_name" property="name" jdbcType="VARCHAR"/>
+        <result column="auth_param" property="param" jdbcType="VARCHAR"/>
+        <result column="auth_status" property="status" jdbcType="INTEGER"/>
+        <result column="auth_superior_id" property="superiorId" jdbcType="INTEGER"/>
+        <result column="auth_type" property="type" jdbcType="INTEGER"/>
+        <result column="auth_url" property="url" jdbcType="VARCHAR"/>
+        <result column="auth_accept_method" property="acceptMethod" jdbcType="VARCHAR"/>
+        <result column="auth_is_api" property="isApi" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="user_list">
+    user.id as user_id, user.branch_id as user_branch_id, user.department_id as user_department_id, 
+    user.password as user_password, user.station_id as user_station_id, user.status as user_status, 
+    user.username as user_username
+  </sql>
+    <sql id="authority_list">
+    auth.id as auth_id, auth.action as auth_action, auth.controller as auth_controller,
+    auth.description as auth_description, auth.name as auth_name, auth.param as auth_param,
+    auth.status as auth_status, auth.superior_id as auth_superior_id, auth.type as auth_type,
+    auth.url as auth_url, auth.accept_method as auth_accept_method, auth.is_api as auth_is_api
+  </sql>
+    <sql id="role_list">
+    role.id as role_id, role.description as role_description, role.name as role_name,
+    role.status as role_status
+  </sql>
+    <select id="selectById" resultMap="UserMap" parameterType="java.lang.Integer">
+        select
+        <include refid="user_list"/>,
+        <include refid="role_list"/>,
+        <include refid="authority_list"/>
+        from user user
+        left join user_role_x ur on ur.user_id = user.id
+        LEFT JOIN role role on role.id = ur.role_id
+        LEFT JOIN role_authority_x ra on ra.role_id = role.id
+        LEFT JOIN authority auth on auth.id = ra.authority_id
+        where user.id = #{id,jdbcType=INTEGER}
     </select>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="co.bugu.tes.domain.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="branchId != null">
+                branch_id,
+            </if>
+            <if test="departmentId != null">
+                department_id,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="stationId != null">
+                station_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="username != null">
+                username,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="branchId != null">
+                #{branchId,jdbcType=INTEGER},
+            </if>
+            <if test="departmentId != null">
+                #{departmentId,jdbcType=INTEGER},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="stationId != null">
+                #{stationId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                #{username,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateById" parameterType="co.bugu.tes.domain.User">
+        update user
+        <set>
+            <if test="branchId != null">
+                branch_id = #{branchId,jdbcType=INTEGER},
+            </if>
+            <if test="departmentId != null">
+                department_id = #{departmentId,jdbcType=INTEGER},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="stationId != null">
+                station_id = #{stationId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="username != null">
+                username = #{username,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
 
     <select id="findByObject" resultMap="UserMap" parameterType="co.bugu.tes.domain.User">
-        SELECT * from tes_user
+        select
+        <include refid="user_list"/>
+        from user user
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="username != null">
+                and username = #{username}
+            </if>
+            <if test="password != null">
+                and password = #{password}
+            </if>
+        </where>
     </select>
-
-    <insert id="insert" parameterType="co.bugu.tes.domain.User" keyProperty="id" useGeneratedKeys="true">
-        insert into tes_user(id, username, password) values (#{id}, #{username}, #{password})
-    </insert>
 </mapper>

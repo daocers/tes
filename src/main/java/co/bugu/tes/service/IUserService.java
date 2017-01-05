@@ -1,6 +1,8 @@
 package co.bugu.tes.service;
 
 
+import co.bugu.framework.service.IBaseService;
+
 public interface IUserService<User> extends IBaseService<User> {
 //    int save(User user);
 //
