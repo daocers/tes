@@ -17,6 +17,7 @@
         <id column="role_id" property="id" jdbcType="INTEGER"/>
         <result column="role_description" property="description" jdbcType="VARCHAR"/>
         <result column="role_name" property="name" jdbcType="VARCHAR"/>
+        <result column="role_code" property="code" jdbcType="VARCHAR"/>
         <result column="role_status" property="status" jdbcType="INTEGER"/>
         <collection property="authorityList" ofType="co.bugu.tes.domain.Authority"/>
     </resultMap>
@@ -47,7 +48,7 @@
     auth.url as auth_url, auth.accept_method as auth_accept_method, auth.is_api as auth_is_api
   </sql>
     <sql id="role_list">
-    role.id as role_id, role.description as role_description, role.name as role_name,
+    role.id as role_id, role.code as role_code, role.description as role_description, role.name as role_name,
     role.status as role_status
   </sql>
     <select id="selectById" resultMap="UserMap" parameterType="java.lang.Integer">

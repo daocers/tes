@@ -28,4 +28,15 @@
             <!--<value>1024000</value>-->
         <!--</property>-->
     <!--</bean>-->
+
+
+    <!--开始shiro注解-->
+    <!--  注意：只有以下配置在mvc的配置文件中，才能生效-->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+          depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
 </beans>

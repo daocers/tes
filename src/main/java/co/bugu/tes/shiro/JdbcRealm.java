@@ -30,6 +30,7 @@ public class JdbcRealm extends AuthorizingRealm {
     IUserService<User> userService;
 
     /**
+     * 权限认证 获取登录用户的权限
      * 为当前登录成功的用户授权和角色，
      * @param principalCollection
      * @return
@@ -42,7 +43,7 @@ public class JdbcRealm extends AuthorizingRealm {
         Set<String> roles = new HashSet<>();
         if(user.getRoleList().size() > 0){
             for(Role role: user.getRoleList()){
-                roles.add(role.getName());
+                roles.add(role.getCode());
             }
         }
 
@@ -51,11 +52,8 @@ public class JdbcRealm extends AuthorizingRealm {
         Set<String> authorities = new HashSet<>();
         if(user.getAuthorityList().size() > 0){
             for(Authority authority: user.getAuthorityList()){
-                authorities.add(authority.getName());
+                authorities.add(authority.getUrl());
             }
-        }
-        for(Authority authority: user.getAuthorityList()){
-            authorities.add(authority.getName());
         }
         authorizationInfo.setStringPermissions(authorities);
         return authorizationInfo;

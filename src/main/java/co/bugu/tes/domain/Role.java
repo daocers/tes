@@ -12,9 +12,19 @@ public class Role {
 
     private String name;
 
+    private String code;
+
     private Integer status;
 
     private List<Authority> authorityList;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public Integer getId() {
         return id;

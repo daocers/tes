@@ -1,3 +1,4 @@
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -13,5 +14,7 @@
 <body>
 欢迎你${user.username }
 <a href="${pageContext.request.contextPath }/user/logout.do">退出</a>
+<shiro:hasRole name="admin">系统管理员</shiro:hasRole>
+<shiro:hasRole name="会员">会员</shiro:hasRole>
 </body>
 </html>
