@@ -2,25 +2,27 @@ package co.bugu.tes.domain;
 
 import java.util.List;
 
-public class Role {
+public class Property {
     private Integer id;
+
+    private String code;
 
     private String description;
 
-    private String code;
+    private Integer idx;
 
     private String name;
 
     private Integer status;
 
-    private List<Authority> authorityList;
+    private List<PropertyItem> propertyItemList;
 
-    public String getCode() {
-        return code;
+    public List<PropertyItem> getPropertyItemList() {
+        return propertyItemList;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setPropertyItemList(List<PropertyItem> propertyItemList) {
+        this.propertyItemList = propertyItemList;
     }
 
     public Integer getId() {
@@ -31,12 +33,28 @@ public class Role {
         this.id = id;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getIdx() {
+        return idx;
+    }
+
+    public void setIdx(Integer idx) {
+        this.idx = idx;
     }
 
     public String getName() {
@@ -53,13 +71,5 @@ public class Role {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public List<Authority> getAuthorityList() {
-        return authorityList;
-    }
-
-    public void setAuthorityList(List<Authority> authorityList) {
-        this.authorityList = authorityList;
     }
 }

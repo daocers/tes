@@ -2,9 +2,6 @@ package co.bugu.tes.domain;
 
 import java.util.List;
 
-/**
- * Created by Administrator on 2016/12/28.
- */
 public class User {
     private Integer id;
 
@@ -26,6 +23,29 @@ public class User {
 
     private Profile profile;
 
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
+    }
+
+    public List<Role> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
+    }
+
+    public List<Authority> getAuthorityList() {
+        return authorityList;
+    }
+
+    public void setAuthorityList(List<Authority> authorityList) {
+        this.authorityList = authorityList;
+    }
 
     public Integer getId() {
         return id;
@@ -81,29 +101,5 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public List<Role> getRoleList() {
-        return roleList;
-    }
-
-    public void setRoleList(List<Role> roleList) {
-        this.roleList = roleList;
-    }
-
-    public List<Authority> getAuthorityList() {
-        return authorityList;
-    }
-
-    public void setAuthorityList(List<Authority> authorityList) {
-        this.authorityList = authorityList;
-    }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
-    public void setProfile(Profile profile) {
-        this.profile = profile;
     }
 }

@@ -18,4 +18,6 @@
 
     <logger name="co.bugu"/>
 
+
+    <logger name="*"/>
 </configuration>

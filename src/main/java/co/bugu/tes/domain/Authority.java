@@ -1,8 +1,5 @@
 package co.bugu.tes.domain;
 
-/**
- * Created by daocers on 2017/1/5.
- */
 public class Authority {
     private Integer id;
 
@@ -29,6 +26,22 @@ public class Authority {
     private Integer isApi;
 
     private Integer idx;
+
+    public Integer getIdx() {
+        return idx;
+    }
+
+    public void setIdx(Integer idx) {
+        this.idx = idx;
+    }
+
+    public Integer getIsApi() {
+        return isApi;
+    }
+
+    public void setIsApi(Integer isApi) {
+        this.isApi = isApi;
+    }
 
     public Integer getId() {
         return id;
@@ -116,21 +129,5 @@ public class Authority {
 
     public void setAcceptMethod(String acceptMethod) {
         this.acceptMethod = acceptMethod;
-    }
-
-    public Integer getIsApi() {
-        return isApi;
-    }
-
-    public void setIsApi(Integer isApi) {
-        this.isApi = isApi;
-    }
-
-    public Integer getIdx() {
-        return idx;
-    }
-
-    public void setIdx(Integer idx) {
-        this.idx = idx;
     }
 }

@@ -19,4 +19,6 @@ public interface IBaseService<T> {
     List<T> findByObject(T record);
 
     PageInfo findByObject(T record, PageInfo<T> pageInfo) throws Exception;
+
+    PageInfo findByObject(T record, Integer showCount, Integer curPage) throws Exception;
 }

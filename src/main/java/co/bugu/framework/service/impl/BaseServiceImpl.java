@@ -57,4 +57,11 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
         return baseDao.listByObject(nameSpace + "findByObject", record, pageInfo);
     }
 
+    @Override
+    public PageInfo findByObject(T record, Integer showCount, Integer curPage) throws Exception {
+        PageInfo<T> pageInfo = new PageInfo<T>(showCount, curPage);
+        baseDao.listByObject(nameSpace + "findByObject", record, pageInfo);
+        return pageInfo;
+    }
+
 }

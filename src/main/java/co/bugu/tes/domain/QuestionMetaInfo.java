@@ -2,25 +2,25 @@ package co.bugu.tes.domain;
 
 import java.util.List;
 
-public class Role {
+public class QuestionMetaInfo {
     private Integer id;
 
-    private String description;
-
     private String code;
+
+    private String description;
 
     private String name;
 
     private Integer status;
 
-    private List<Authority> authorityList;
+    private List<Property> propertyList;
 
-    public String getCode() {
-        return code;
+    public List<Property> getPropertyList() {
+        return propertyList;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setPropertyList(List<Property> propertyList) {
+        this.propertyList = propertyList;
     }
 
     public Integer getId() {
@@ -29,6 +29,14 @@ public class Role {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDescription() {
@@ -53,13 +61,5 @@ public class Role {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public List<Authority> getAuthorityList() {
-        return authorityList;
-    }
-
-    public void setAuthorityList(List<Authority> authorityList) {
-        this.authorityList = authorityList;
     }
 }
