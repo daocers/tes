@@ -2,6 +2,7 @@ package co.bugu.tes.controller;
 
 import co.bugu.tes.domain.User;
 import co.bugu.tes.service.IUserService;
+import co.bugu.tes.util.VerifyCodeUtil;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -72,12 +74,36 @@ public class LoginController {
     }
 
 
+    /**
+     * 跳转到登陆页面，如果用户已经选择记住我，带出用户名等信息
+     * @param modelMap
+     * @return
+     */
     @RequestMapping("/toLogin")
-    public String toLogin(){
+    public String toLogin(ModelMap modelMap){
+        Subject subject = SecurityUtils.getSubject();
+        if(subject != null){
+            if(subject.isRemembered()){
+                modelMap.put("username", subject.getSession().getAttribute("username"));
+                modelMap.put("rememberMe", true);
+            }
+        }
         return "login";
     }
 
 
+    /**
+     *
+     * @return
+     */
+    @RequestMapping("/verifyCode")
+    public String getVerifyCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Session session = SecurityUtils.getSubject().getSession();
+        String code = VerifyCodeUtil.generateVerifyCode(4);
+        session.setAttribute("verifyCode", code);
+        VerifyCodeUtil.outputImage(50, 20, response.getOutputStream(), code);
+        return null;
+    }
 
     @RequiresRoles("user")
     @RequestMapping("/good")
