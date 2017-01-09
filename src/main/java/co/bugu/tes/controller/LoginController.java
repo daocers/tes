@@ -38,7 +38,7 @@ public class LoginController {
     private static Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
-    IUserService<User> userService;
+    IUserService userService;
 
     @RequestMapping("/login")
     public String login(String username, String password, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

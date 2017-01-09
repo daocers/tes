@@ -22,7 +22,7 @@ public class BaseServiceImpl<T> implements IBaseService<T> {
         Class clazz = this.getClass();
         ParameterizedType type = (ParameterizedType) clazz.getGenericSuperclass();
         Type[] types = type.getActualTypeArguments();
-        String simpleName = types[0].getTypeName();
+        String simpleName = ((Class)types[0]).getSimpleName();
         nameSpace = "tes." + simpleName.substring(0,1).toLowerCase() + simpleName.substring(1) + ".";
         
     }

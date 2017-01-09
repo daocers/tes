@@ -1,0 +1,139 @@
+* {
+    font-family: "Microsoft YaHei UI";
+}
+
+.line-space {
+    height: 20px;
+}
+
+.inline-space {
+    display: inline-block;
+    width: 50px;
+}
+
+.form-inline {
+    margin-top: 10px;
+
+}
+
+.prop-form {
+    border: 1px #bce8f1 solid;
+    border-radius: 5px;
+    padding-bottom: 10px;
+}
+
+/*以下是表格可编辑插件的css样式*/
+.cell-label, .cell-input{
+    height: auto;
+    width: auto;
+}
+.cell-label{
+    position: absolute;
+    z-index: 100;
+    background-color: white;
+}
+.cell-input{
+    position: absolute;
+    z-index: 0;
+    background-color: white;
+}
+.cell-input input{
+    height: 100%;
+    width: 100%;
+}
+.table td.cell-edit{
+    padding: 0px;
+    position: relative;
+}
+.cell-input{
+    width: 100%;
+    height:100%;
+    border: 1px solid lightskyblue;
+}
+.cell-label{
+    width: 100%;
+    height:100%;
+    padding: 6px 12px;
+    vertical-align: middle;
+}
+
+/**/
+span.help-block{
+    color: rgba(92, 185, 240, 0.92);
+}
+
+/*
+    以下是表格td中直接放入输入框，选择框
+*/
+
+/*.table-editable > tbody > tr > td {*/
+    /*padding: 0px;*/
+/*}*/
+
+select.form-control.form-control-intable, input.form-control.form-control-intable {
+    width: 100%;
+    border-top: none;
+}
+tbody > tr > td.cell-edit{
+    padding: 0px;
+}
+.table-editable tbody tr td{
+    padding: 0px;
+}
+
+/*输入警告*/
+.input-warning {
+    /*color: #ff8e18;*/
+    background-color: #ffd843;
+}
+
+/*输入错误*/
+.input-error {
+    color: red;;
+}
+
+/*文本居中*/
+.text-center{
+    text-align: center;
+}
+
+
+.person-center{
+    height: 32px;
+    width: 32px;
+    background-image: url("/tes/assets/img/head-off.png");
+    background-size: cover;
+}
+
+
+.pull-right > *{
+    display: inline-block;
+}
+
+.space{
+    width: 100px;
+}
+
+nav > ul.pagination{
+    margin: 0px auto;
+    position: relative;
+    top:13px;
+}
+
+
+/*
+ * 每页显示数量
+*/
+.form-inline > *{
+    display: inline;
+}
+select.show-count.form-control{
+    width: auto;
+    display: inline;
+}
+
+
+
+.form-group > label.control-label{
+    text-align: left;
+}

@@ -27,7 +27,7 @@ public class JdbcRealm extends AuthorizingRealm {
     private Logger logger = LoggerFactory.getLogger(JdbcRealm.class);
 
     @Autowired
-    IUserService<User> userService;
+    IUserService userService;
 
     /**
      * 权限认证 获取登录用户的权限

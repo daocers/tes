@@ -25,7 +25,7 @@ public class UserController {
     private Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
-    IUserService<User> userService;
+    IUserService userService;
 
     @Autowired
     BaseDao baseDao;

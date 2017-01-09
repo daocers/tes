@@ -1,0 +1,56 @@
+.pagination{
+    margin: 0px;
+}
+ul.pagination{
+    height:39px;
+    line-height:39px;
+    vertical-align: middle;
+}
+
+.pull-left > *{
+    display: inline;
+}
+.logo{
+    font-size: 50px;
+}
+.head{
+    vertical-align: middle;
+    line-height: 60px;
+}
+
+.label{
+    margin-top: 5px;
+    margin-bottom:5px;
+    padding-top: 4.5px;
+    height: 30px;
+    font-size: 15px;
+}
+.manage-info{
+    line-height: 30px;
+    height: 30px;
+}
+
+
+.space{
+    margin-right: 10px;
+}
+.small{
+    width: 10px;
+}
+#to-page{
+    width: 60px;
+}
+
+.form-inline{
+    margin-top: 0px;
+}
+
+
+
+/*路径导航中当前路径禁用掉a标签*/
+a.active{
+    text-decoration: none;
+    outline:0 none;
+    pointer-events: none;
+    color: dimgray;
+}

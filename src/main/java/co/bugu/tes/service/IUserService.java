@@ -2,8 +2,9 @@ package co.bugu.tes.service;
 
 
 import co.bugu.framework.service.IBaseService;
+import co.bugu.tes.domain.User;
 
-public interface IUserService<User> extends IBaseService<User> {
+public interface IUserService extends IBaseService<User> {
 //    int save(User user);
 //
 //    int updateById(User user);

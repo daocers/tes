@@ -3,6 +3,10 @@ package co.bugu.tes.controller;
 import co.bugu.framework.dao.PageInfo;
 import co.bugu.tes.domain.Authority;
 import co.bugu.tes.service.IAuthorityService;
+import co.bugu.tes.util.JsonUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,142 +130,142 @@ public class AuthorityController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/init")
-    public String init(ModelMap model){
-        try{
-            List<Authority> authorities = authorityService.findByObject(null);
-            List<String> urlList = new ArrayList<>();
-            for(Authority auth : authorities){
-                urlList.add(auth.getUrl());
-            }
-
-            List<MvcParam> list = ReflectUtil.getAnnotationInfo(AuthorityController.class.getPackage().getName());
-
-            Set<String> controllerSet = new HashSet<>();
-            for(MvcParam param: list){
-                controllerSet.add(param.getControllerName());
-                String url = param.getRootPath() + param.getPath();
-                if(urlList.contains(url)){
-                    continue;
-                }
-                if(param.getPath() == null){
-                    continue;
-                }
-                Authority auth = new Authority();
-                auth.setStatus(Constant.STATUS_ENABLE);
-                auth.setAction(param.getMethodName());
-                auth.setController(param.getControllerName());
-                auth.setDescription("");
-                auth.setName("");
-                auth.setParam(null);
-                auth.setSuperiorId(null);
-
-                auth.setType(Constant.AUTH_TYPE_MENU);
-                auth.setUrl(param.getRootPath() + param.getPath());
-                auth.setAcceptMethod(param.getMethod());
-                auth.setIsApi(param.getApi() ? Constant.AUTH_API_TRUE : Constant.AUTH_API_FALSE);
-                authorityService.save(auth);
-            }
-
-            Authority authority = new Authority();
-            authority.setType(Constant.AUTH_TYPE_BOX);
-            authorities = authorityService.findAllByObject(authority);
-            List<String> controllerList = new ArrayList<>();
-            for(Authority auth: authorities){
-                controllerList.add(auth.getController());
-            }
-            for(String con: controllerSet){
-                if(controllerList.contains(con)){
-                    continue;
-                }
-                Authority auth = new Authority();
-                auth.setStatus(Constant.STATUS_ENABLE);
-                auth.setController(con);
-                auth.setType(Constant.AUTH_TYPE_BOX);
-                auth.setName("");
-                auth.setDescription("");
-                auth.setIsApi(Constant.AUTH_API_FALSE);
-                authorityService.save(auth);
-                auth.setSuperiorId(auth.getId());
-                authorityService.batchUpdate(auth);
-            }
-
-        }catch (Exception e){
-            logger.error("初始化工程内的信息失败", e);
-        }
-        return "redirect:list.do";
-    }
+//    @RequestMapping(value = "/init")
+//    public String init(ModelMap model){
+//        try{
+//            List<Authority> authorities = authorityService.findByObject(null);
+//            List<String> urlList = new ArrayList<>();
+//            for(Authority auth : authorities){
+//                urlList.add(auth.getUrl());
+//            }
+//
+//            List<MvcParam> list = ReflectUtil.getAnnotationInfo(AuthorityController.class.getPackage().getName());
+//
+//            Set<String> controllerSet = new HashSet<>();
+//            for(MvcParam param: list){
+//                controllerSet.add(param.getControllerName());
+//                String url = param.getRootPath() + param.getPath();
+//                if(urlList.contains(url)){
+//                    continue;
+//                }
+//                if(param.getPath() == null){
+//                    continue;
+//                }
+//                Authority auth = new Authority();
+//                auth.setStatus(Constant.STATUS_ENABLE);
+//                auth.setAction(param.getMethodName());
+//                auth.setController(param.getControllerName());
+//                auth.setDescription("");
+//                auth.setName("");
+//                auth.setParam(null);
+//                auth.setSuperiorId(null);
+//
+//                auth.setType(Constant.AUTH_TYPE_MENU);
+//                auth.setUrl(param.getRootPath() + param.getPath());
+//                auth.setAcceptMethod(param.getMethod());
+//                auth.setIsApi(param.getApi() ? Constant.AUTH_API_TRUE : Constant.AUTH_API_FALSE);
+//                authorityService.save(auth);
+//            }
+//
+//            Authority authority = new Authority();
+//            authority.setType(Constant.AUTH_TYPE_BOX);
+//            authorities = authorityService.findAllByObject(authority);
+//            List<String> controllerList = new ArrayList<>();
+//            for(Authority auth: authorities){
+//                controllerList.add(auth.getController());
+//            }
+//            for(String con: controllerSet){
+//                if(controllerList.contains(con)){
+//                    continue;
+//                }
+//                Authority auth = new Authority();
+//                auth.setStatus(Constant.STATUS_ENABLE);
+//                auth.setController(con);
+//                auth.setType(Constant.AUTH_TYPE_BOX);
+//                auth.setName("");
+//                auth.setDescription("");
+//                auth.setIsApi(Constant.AUTH_API_FALSE);
+//                authorityService.save(auth);
+//                auth.setSuperiorId(auth.getId());
+//                authorityService.batchUpdate(auth);
+//            }
+//
+//        }catch (Exception e){
+//            logger.error("初始化工程内的信息失败", e);
+//        }
+//        return "redirect:list.do";
+//    }
 
     /**
      * 通过ztree进行管理
      * @param modelMap
      * @return
      */
-    @RequestMapping(value = "/manage", method = RequestMethod.GET)
-    public String manage(ModelMap modelMap){
-        try{
-            Authority authority = new Authority();
-            authority.setStatus(Constant.STATUS_ENABLE);
-            List<Authority> list = authorityService.findAllByObject(authority);
-            List<Map<String, Object>> res = new ArrayList<>();
-            for(Authority auth : list){
-                Map<String, Object> map = new HashedMap();
-                map.put("id", auth.getId());
-                map.put("pId", auth.getSuperiorId() == null ? 0 : auth.getSuperiorId());
-                map.put("name", auth.getName());
-                if(auth.getUrl() != null && !auth.getUrl().equals("")){//url菜单
-                    map.put("dropInner", false);
-                }else{//菜单目录
-
-                }
-                res.add(map);
-            }
-            modelMap.put("zNode", JSON.toJSONString(res));
-        }catch (Exception e){
-            logger.error("获取权限管理信息失败", e);
-            return "redirect:list.do";
-        }
-        return "authority/manage";
-    }
+//    @RequestMapping(value = "/manage", method = RequestMethod.GET)
+//    public String manage(ModelMap modelMap){
+//        try{
+//            Authority authority = new Authority();
+//            authority.setStatus(Constant.STATUS_ENABLE);
+//            List<Authority> list = authorityService.findAllByObject(authority);
+//            List<Map<String, Object>> res = new ArrayList<>();
+//            for(Authority auth : list){
+//                Map<String, Object> map = new HashedMap();
+//                map.put("id", auth.getId());
+//                map.put("pId", auth.getSuperiorId() == null ? 0 : auth.getSuperiorId());
+//                map.put("name", auth.getName());
+//                if(auth.getUrl() != null && !auth.getUrl().equals("")){//url菜单
+//                    map.put("dropInner", false);
+//                }else{//菜单目录
+//
+//                }
+//                res.add(map);
+//            }
+//            modelMap.put("zNode", JSON.toJSONString(res));
+//        }catch (Exception e){
+//            logger.error("获取权限管理信息失败", e);
+//            return "redirect:list.do";
+//        }
+//        return "authority/manage";
+//    }
 
     /**
      * 批量更新ztree提交的数据
      * @param info
      * @return
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
-    @ResponseBody
-    public String update(String info){
-        try{
-            List<Authority> authorityList = new ArrayList<>();
-            JSONArray arr = JSON.parseArray(info);
-            for(int i = 0; i < arr.size(); i++){
-                JSONObject obj = (JSONObject) arr.get(i);
-                Authority authority = null;
-                Integer id = obj.getInteger("id");
-                Integer superiorId = obj.getInteger("pId");
-                String name = obj.getString("name");
-                if(id == null){//新增的
-                    authority = new Authority();
-                    authority.setId(id);
-                    authority.setType(Constant.AUTH_TYPE_MENU);
-                    authority.setDescription("");
-                }else{
-                    authority = authorityService.findById(id);
-                }
-                authority.setIdx(i);
-                authority.setName(name);
-                authority.setSuperiorId(superiorId);
-                authority.setStatus(Constant.STATUS_ENABLE);
-                authorityList.add(authority);
-            }
-            authorityService.rebuildInfo(authorityList);
-            return "0";
-        }catch (Exception e){
-            logger.error("批量更新失败", e);
-            return "-1";
-        }
-    }
+//    @RequestMapping(value = "/update", method = RequestMethod.POST)
+//    @ResponseBody
+//    public String update(String info){
+//        try{
+//            List<Authority> authorityList = new ArrayList<>();
+//            JSONArray arr = JSON.parseArray(info);
+//            for(int i = 0; i < arr.size(); i++){
+//                JSONObject obj = (JSONObject) arr.get(i);
+//                Authority authority = null;
+//                Integer id = obj.getInteger("id");
+//                Integer superiorId = obj.getInteger("pId");
+//                String name = obj.getString("name");
+//                if(id == null){//新增的
+//                    authority = new Authority();
+//                    authority.setId(id);
+//                    authority.setType(Constant.AUTH_TYPE_MENU);
+//                    authority.setDescription("");
+//                }else{
+//                    authority = authorityService.findById(id);
+//                }
+//                authority.setIdx(i);
+//                authority.setName(name);
+//                authority.setSuperiorId(superiorId);
+//                authority.setStatus(Constant.STATUS_ENABLE);
+//                authorityList.add(authority);
+//            }
+//            authorityService.rebuildInfo(authorityList);
+//            return "0";
+//        }catch (Exception e){
+//            logger.error("批量更新失败", e);
+//            return "-1";
+//        }
+//    }
 
     @RequestMapping(value = "/commit", method = RequestMethod.POST)
     @ResponseBody

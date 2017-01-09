@@ -163,7 +163,7 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
 
             newSql = "select count(0) as cnt from (" + newSql + " group by 1) as tmp";
         }else{
-            newSql = "select count(0) ac cnt from " + sql.split("from")[1];
+            newSql = "select count(0) as cnt from " + sql.split("from")[1];
         }
 
         logger.debug("执行分页，查询语句为： {}", newSql);
@@ -180,7 +180,7 @@ public class BaseDao<T> extends SqlSessionDaoSupport {
             count = (rs.next()) ? rs.getInt("cnt") : 0;
             rs.close();
         } catch (SQLException e) {
-            throw new Exception("执行记录总数SQL时发生异常", e);
+            throw new Exception("执行记录总数SQL时发生异常, sql语句为：" + newSql , e);
         } finally {
             try {
                 if (ps != null) {
