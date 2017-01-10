@@ -70,8 +70,9 @@
 
 
     <%--日期选择框--%>
-    <link href="../assets/css/flatpickr.min.css" rel="stylesheet">
+    <link href="../assets/css/flatpickr.material_blue.min.css" rel="stylesheet">
     <script src="../assets/js/flatpickr.min.js"></script>
+    <script src="../assets/js/flatpickr.l10n.zh.js"></script>
 </head>
 <body>
 
@@ -246,15 +247,18 @@
 
     </script>
 
-    <input id="date" class="date" dateFormat="yyyy-mm-dd" enableTime="true">
+    <input type="text" id="date" class="date form-control" dateFormat="yyyy-mm-dd" enableTime="true">
     <script>
+        /**
+         * 日期类型
+         */
         $(".date").flatpickr({
-            dateFormat: $(this).attr("format"),
-            prevArror: '<',
-            nextArror: '>',
-            enableTime: $(this).attr("enableTime"),
-
-            l: '一 二 三 四 五 六 日'
+        });
+        /**
+         * 时间类型，默认打开时间显示
+         */
+        $(".time").flatpickr({
+            enableTime: true,
         })
     </script>
 </body>

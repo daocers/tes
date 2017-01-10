@@ -2,14 +2,8 @@ package co.bugu.tes.controller;
 
 import co.bugu.framework.core.dao.PageInfo;
 import co.bugu.framework.util.JsonUtil;
-import co.bugu.tes.model.Branch;
-import co.bugu.tes.model.Department;
-import co.bugu.tes.model.Station;
-import co.bugu.tes.model.User;
-import co.bugu.tes.service.IBranchService;
-import co.bugu.tes.service.IDepartmentService;
-import co.bugu.tes.service.IStationService;
-import co.bugu.tes.service.IUserService;
+import co.bugu.tes.model.Page;
+import co.bugu.tes.service.IPageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,39 +16,33 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/page")
+public class PageController {
     @Autowired
-    IUserService userService;
-    @Autowired
-    IDepartmentService departmentService;
-    @Autowired
-    IBranchService branchService;
-    @Autowired
-    IStationService stationService;
+    IPageService pageService;
 
-    private static Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static Logger logger = LoggerFactory.getLogger(PageController.class);
 
     /**
     * 列表，分页显示
-    * @param user  查询数据
+    * @param page  查询数据
     * @param curPage 当前页码，从1开始
     * @param showCount 当前页码显示数目
     * @param model
     * @return
     */
     @RequestMapping(value = "/list")
-    public String list(User user, Integer curPage, Integer showCount, ModelMap model){
+    public String list(Page page, Integer curPage, Integer showCount, ModelMap model){
         try{
-            PageInfo<User> pageInfo = new PageInfo<>(showCount, curPage);
-            pageInfo = userService.listByObject(user, pageInfo);
+            PageInfo<Page> pageInfo = new PageInfo<>(showCount, curPage);
+            pageInfo = pageService.listByObject(page, pageInfo);
             model.put("pi", pageInfo);
-            model.put("user", user);
+            model.put("page", page);
         }catch (Exception e){
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
         }
-        return "user/list";
+        return "page/list";
 
     }
 
@@ -67,50 +55,44 @@ public class UserController {
     @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public String toEdit(Integer id, ModelMap model){
         try{
-            User user = userService.findById(id);
-            model.put("user", user);
-            List<Department> departmentList = departmentService.findAllByObject(null);
-            List<Station> stationList = stationService.findAllByObject(null);
-            List<Branch> branchList = branchService.findAllByObject(null);
-            model.put("departmentList", departmentList);
-            model.put("stationList", stationList);
-            model.put("branchList", branchList);
+            Page page = pageService.findById(id);
+            model.put("page", page);
         }catch (Exception e){
             logger.error("获取信息失败", e);
             model.put("errMsg", "获取信息失败");
         }
-        return "user/edit";
+        return "page/edit";
     }
 
     /**
     * 保存结果，根据是否带有id来表示更新或者新增
-    * @param user
+    * @param page
     * @param model
     * @return
     */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(User user, ModelMap model){
+    public String save(Page page, ModelMap model){
         try{
-            userService.saveOrUpdate(user);
+            pageService.saveOrUpdate(page);
         }catch (Exception e){
             logger.error("保存失败", e);
-            model.put("user", user);
+            model.put("page", page);
             model.put("errMsg", "保存失败");
-            return "user/edit";
+            return "page/edit";
         }
         return "redirect:list.do";
     }
 
     /**
     * 异步请求 获取全部
-    * @param user 查询条件
+    * @param page 查询条件
     * @return
     */
     @RequestMapping(value = "/listAll")
     @ResponseBody
-    public String listAll(User user){
+    public String listAll(Page page){
         try{
-            List<User> list = userService.findAllByObject(user);
+            List<Page> list = pageService.findAllByObject(page);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
@@ -120,14 +102,14 @@ public class UserController {
 
     /**
     * 异步请求 删除
-    * @param user id
+    * @param page id
     * @return
     */
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public String delete(User user){
+    public String delete(Page page){
         try{
-            userService.delete(user);
+            pageService.delete(page);
             return "0";
         }catch (Exception e){
             logger.error("删除失败", e);

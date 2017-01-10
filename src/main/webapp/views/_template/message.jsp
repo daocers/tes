@@ -13,14 +13,34 @@
 </head>
 <body>
     <div class="hide" id="msg">
-       ${info}
+       ${msg}
     </div>
     <div class="hide" id="err">
-        ${info}
+        ${err}
     </div>
-    <div>
 
-    </div>
+    <script>
+        $(function () {
+            var msg = $("#msg").text().trim();
+            if(msg && msg != ''){
+                zeroModal.alert({
+                    content: '提示',
+                    contentDetail: msg,
+                    okFn: function() {
+                    }
+                });
+            }
+
+            var err = $("#err").text().trim();
+            if(err && err != ''){
+                zeroModal.error({
+                    content: "异常",
+                    contentDetail: err
+                })
+            }
+
+        })
+    </script>
 
 
 

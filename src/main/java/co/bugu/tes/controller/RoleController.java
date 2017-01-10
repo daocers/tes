@@ -1,16 +1,12 @@
 package co.bugu.tes.controller;
 
-//import co.bugu.framework.core.dao.PageInfo;
-//import co.bugu.framework.util.JsonUtil;
-//import co.bugu.tes.global.Constant;
-//import co.bugu.tes.model.Authority;
-//import co.bugu.tes.model.Role;
-import co.bugu.framework.dao.PageInfo;
-import co.bugu.tes.domain.Authority;
-import co.bugu.tes.domain.Role;
+import co.bugu.framework.core.dao.PageInfo;
+import co.bugu.framework.util.JsonUtil;
+import co.bugu.tes.global.Constant;
+import co.bugu.tes.model.Authority;
+import co.bugu.tes.model.Role;
 import co.bugu.tes.service.IAuthorityService;
 import co.bugu.tes.service.IRoleService;
-import co.bugu.tes.util.JsonUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -50,11 +46,10 @@ public class RoleController {
     @RequestMapping(value = "/list")
     public String list(Role role, Integer curPage, Integer showCount, ModelMap model){
         try{
-//            PageInfo<Role> pageInfo = new PageInfo<>(showCount, curPage);
-//            pageInfo = roleService.findByObject(role, pageInfo);
-//            model.put("pi", pageInfo);
-//            model.put("role", role);
-            model.put("info", "someinfo");
+            PageInfo<Role> pageInfo = new PageInfo<>(showCount, curPage);
+            pageInfo = roleService.listByObject(role, pageInfo);
+            model.put("pi", pageInfo);
+            model.put("role", role);
         }catch (Exception e){
             logger.error("获取列表失败", e);
             model.put("errMsg", "获取列表失败");
@@ -83,7 +78,7 @@ public class RoleController {
             }
 
 
-            List<Authority> authorityList = authorityService.findByObject(null);
+            List<Authority> authorityList = authorityService.findAllByObject(null);
             List<Map<String, Object>> data = new ArrayList<>();
             for(Authority auth: authorityList){
                 Map<String, Object> map = new HashMap<>();
@@ -93,9 +88,9 @@ public class RoleController {
                 if(idList.contains(auth.getId())){
                     map.put("checked", true);
                 }
-//                if(Constant.AUTH_TYPE_BOX.equals(auth.getType())){
-//                    map.put("open", true);
-//                }
+                if(Constant.AUTH_TYPE_BOX.equals(auth.getType())){
+                    map.put("open", true);
+                }
                 data.add(map);
             }
             model.put("zNode", JSON.toJSONString(data, true));
@@ -116,7 +111,7 @@ public class RoleController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(Role role, @RequestParam(value = "nodeInfo", required = false) String info, ModelMap model){
         try{
-//            role.setStatus(Constant.STATUS_ENABLE);
+            role.setStatus(Constant.STATUS_ENABLE);
             List<Map<String, Integer>> xList = new ArrayList<>();
             if(info != null && !info.equals("")){
                 JSONArray arr = JSON.parseArray(info);
@@ -128,7 +123,7 @@ public class RoleController {
                     xList.add(map);
                 }
             }
-//            roleService.save(role, xList);
+            roleService.save(role, xList);
         }catch (Exception e){
             logger.error("保存失败", e);
             model.put("role", role);
@@ -148,7 +143,7 @@ public class RoleController {
     @ResponseBody
     public String listAll(Role role){
         try{
-            List<Role> list = roleService.findByObject(role);
+            List<Role> list = roleService.findAllByObject(role);
             return JsonUtil.toJsonString(list);
         }catch (Exception e){
             logger.error("获取全部列表失败", e);
